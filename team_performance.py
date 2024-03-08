@@ -9,7 +9,6 @@ KEY_PATH = 'var/tba-read-key.txt'
 # Your event and team
 EVENT_KEY = '2024mndu'
 TEAM = 'frc1732'
-# TEAM = 'frc6160'
 
 # URL to get the match detail from TBA API
 URL_START = 'https://www.thebluealliance.com/api/v3/team/'
@@ -37,7 +36,7 @@ def get_team_matches(key, team):
 
 # The core program!!
 def main():
-    input_team = input("Enter team [press enter is default]: ")
+    input_team = input("Enter team [press enter for default]: ")
     if input_team:
         team = 'frc' + input_team
     else:
@@ -45,19 +44,23 @@ def main():
 
     tba_read_key = load_read_key()
     matches = get_team_matches(tba_read_key, team)
-    # print(matches)
 
+    # Variables we use to sum up the metrics
     vals = []
-    percents = {}
-    scores = {}
-    match_count = 0
-
     percents = {'autoLeaveCount':0, 'parkCount':0, 'hangCount':0, 'wins':0}
-
-    score_keys = ['autoAmpNoteCount', 'autoSpeakerNoteCount', 'teleopAmpNoteCount', 'teleopSpeakerNoteCount', 'teleopSpeakerNoteAmplifiedCount', 'autoPoints', 'teleopTotalNotePoints', 'endGameTotalStagePoints', 'foulPoints', 'totalPoints', 'rp']
-    # for key in score_keys:
-    #     scores[key] = 0
-
+    scores = {
+        'autoAmpNoteCount':0, 
+        'autoSpeakerNoteCount':0, 
+        'teleopAmpNoteCount':0, 
+        'teleopSpeakerNoteCount':0, 
+        'teleopSpeakerNoteAmplifiedCount':0, 
+        'autoPoints':0, 
+        'teleopTotalNotePoints':0, 
+        'endGameTotalStagePoints':0, 
+        'foulPoints':0, 
+        'totalPoints':0, 
+        'rp':0}
+    match_count = 0
 
     for m in matches:
         # Ignore matches that have not been played yet or finals skipped
@@ -93,10 +96,9 @@ def main():
                 percents['hangCount'] = percents.get('hangCount', 0) + 1
 
             # Get score metrics
-            for key in score_keys:
-                scores[key] = scores.get(key, 0) + m['score_breakdown'][color][key]
+            for key in scores:
+                scores[key] += m['score_breakdown'][color][key]
 
-            # print('did', color, 'win? ', m['winning_alliance'] )
             if m['winning_alliance'] == color:
                 percents['wins'] = percents.get('wins', 0) + 1
 
