@@ -16,10 +16,10 @@ URL_MID = '/event/'
 URL_END = '/matches/simple?X-TBA-Auth-Key='
 
 # This is used to test on a previous event
-FAKE_DATE = '2023-03-24 15:00'
+FAKE_DATE = '2023-03-24 12:00'
 
 # How many matches to output
-MATCH_COUNT = 3
+MATCH_COUNT = 5
 
 
 # Gets the key from the first line of the file in var/tba-read-key.txt
@@ -39,14 +39,16 @@ def load_read_key():
 # Build the URL, call the Blue Alliance API, return a parsed JSON array
 def get_team_matches(key):
     url = URL_START + TEAM + URL_MID + EVENT_KEY + URL_END + key
+    print(url)
     return requests.get(url).json()
         
 # The core program!!
 def main():
     tba_read_key = load_read_key()
     matches = get_team_matches(tba_read_key)
+    print(matches)
 
-    # Use either now or the fake target and commentt out the other line
+    # Use either now or the fake target and comment out the other line
     #date_target = datetime.datetime.now()
     date_target = datetime.datetime.strptime(FAKE_DATE,"%Y-%m-%d %H:%M")
 

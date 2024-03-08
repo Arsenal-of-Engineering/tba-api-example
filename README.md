@@ -15,7 +15,7 @@ It returns a list of upcoming matches for a specified team and event greater tha
     ```
     Remember that you will need to activate your virtual environment on your next session with `source .venv/bin/activate`
 3. Go to The [Blue Alliance Account](https://www.thebluealliance.com/account) page and create a new Read API Key.
-4. Create a new direcotory and file: `var/tba-read-key.txt` and paste your key there.  This directory is excluded via `.gitignore` so it would not be in the public repository.
+4. Create a new directory and file: `var/tba-read-key.txt` and paste your key there.  This directory is excluded via `.gitignore` so it would not be in the public repository.
 5. Run from a command-line `python tba.py`
 
     Given a target date of 2023-03-24 15:00 for team 6223 at the Milwaukee regional, output should be:
