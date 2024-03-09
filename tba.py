@@ -1,10 +1,5 @@
-import requests
-import json
 import datetime
-import time
-
-# Path to your The Blue Alliance read API key
-KEY_PATH = 'var/tba-read-key.txt'
+import util
 
 # Your event and team
 EVENT_KEY = '2023wimi'
@@ -13,7 +8,7 @@ TEAM = 'frc6223'
 # URL to get the match detail from TBA API
 URL_START = 'https://www.thebluealliance.com/api/v3/team/'
 URL_MID = '/event/'
-URL_END = '/matches/simple?X-TBA-Auth-Key='
+URL_END = '/matches/simple'
 
 # This is used to test on a previous event
 FAKE_DATE = '2023-03-24 12:00'
@@ -21,44 +16,14 @@ FAKE_DATE = '2023-03-24 12:00'
 # How many matches to output
 MATCH_COUNT = 5
 
-
-# Gets the key from the first line of the file in var/tba-read-key.txt
-def load_read_key(): 
-    try:
-        with open(KEY_PATH) as f:
-            lines = f.readlines()
-    except:
-        print('Could not open ' + KEY_PATH)
-        exit()
-    
-    if len(lines[0]) != 64:
-        print('Invalid key, expected length of 64 characters')
-        exit()
-    return lines[0]
-
 # Build the URL, call the Blue Alliance API, return a parsed JSON array
-def get_team_matches(key):
-    url = URL_START + TEAM + URL_MID + EVENT_KEY + URL_END + key
-    print(url)
-    return call_tba_api(url)
-
-# Call the TBA API with retries in case it is busy
-def call_tba_api(url):
-    for i in range(10):
-        try:
-            return requests.get(url).json()
-        except:
-            print('TBA API busy, retrying...')
-            time.sleep(1)
-    print('TBA API busy, giving up...')
-    exit()
-
+def get_team_matches():
+    url = URL_START + TEAM + URL_MID + EVENT_KEY + URL_END 
+    return util.call_tba_api(url).json()
         
 # The core program!!
 def main():
-    tba_read_key = load_read_key()
-    matches = get_team_matches(tba_read_key)
-    print(matches)
+    matches = get_team_matches()
 
     # Use either now or the fake target and comment out the other line
     #date_target = datetime.datetime.now()
