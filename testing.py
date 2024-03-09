@@ -134,7 +134,7 @@ def main():
     # Print score metrics
     for key in scores.keys():
         if key == 'autoPoints':
-            print()ge
+            print()
         val = str(round(scores[key]/match_count, 1))
         print(val.rjust(6, ' ') , ':', key )
 
