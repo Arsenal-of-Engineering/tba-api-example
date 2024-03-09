@@ -2,6 +2,7 @@ import requests
 import json
 import datetime
 import time
+import util
 
 # Path to your The Blue Alliance read API key
 KEY_PATH = 'var/tba-read-key.txt'
@@ -32,43 +33,26 @@ def load_read_key():
     return lines[0]
 
 # Build the URL, call the Blue Alliance API, return a parsed JSON array
-def get_team_matches(key, team, event):
-    url = URL_START + team + URL_MID + event + URL_END + key
-    return call_tba_api(url)
-
-# Call the TBA API with retries in case it is busy
-def call_tba_api(url):
-    for i in range(10):
-        try:
-            return requests.get(url).json()
-        except:
-            print('TBA API busy, retrying...')
-            time.sleep(1)
-    print('TBA API busy, giving up...')
-    exit()
+def get_team_matches(team, event):
+    url = URL_START + team + URL_MID + event + URL_END
+    return util.call_tba_api(url)
     
+   
 # The core program!!
 def main():
-    tba_read_key = load_read_key()
 
     keep_asking = True
     while(keep_asking):
-        input_team = input("Enter team [press enter for default]: ")
+        input_team = input("Enter team [press enter for default of 1732]: ")
 
         if input_team:
             team = 'frc' + input_team
 
-            for i in range(10):
-                try:
-                    if requests.get(URL_START + team + '?X-TBA-Auth-Key=' + tba_read_key).status_code == 404:
-                        print('Team ' + input_team + ' is not a valid team. Please try again.')
-                    else:
-                        keep_asking = False
-                    break
-                except:
-                    print('TBA API busy, retrying...')
-                    time.sleep(1)
-            #print('TBA API busy, giving up...')
+            url = URL_START + team
+            if util.call_tba_api(url).status_code == 404:
+                print('Team ' + input_team + ' is not a valid team. Please try again.')
+            else:
+                keep_asking = False
         else:
             team = TEAM
             keep_asking = False
@@ -76,27 +60,22 @@ def main():
     
     keep_asking = True
     while(keep_asking):
-        input_event = input("Enter an event code [press enter for default]: ")
+        input_event = input("Enter an event code [press enter for default of 2024mndu]: ")
 
         if input_event:
             event = input_event
-            for i in range(10):
-                try:
-                    if requests.get(URL_EVENT_START + event + '?X-TBA-Auth-Key=' + tba_read_key).status_code == 404:
-                        print('Event ' + event + ' is not a valid event. Please try again.')
-                    else:
-                        keep_asking = False
-                    break
-                except:
-                    print('TBA API busy, retrying...')
-                    time.sleep(1)
-            #print('TBA API busy, giving up...')
+
+            url = URL_EVENT_START + event
+            if util.call_tba_api(url).status_code == 404:
+                print('Event ' + event + ' is not a valid event. Please try again.')
+            else:
+                keep_asking = False
         else:
             event = EVENT_KEY
             keep_asking = False
 
 
-    matches = get_team_matches(tba_read_key, team, event)
+    matches = get_team_matches(team, event).json()
     if len(matches) != 0:
         # Variables we use to sum up the metrics
         vals = []
