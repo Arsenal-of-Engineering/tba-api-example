@@ -32,8 +32,19 @@ def load_read_key():
 # Build the URL, call the Blue Alliance API, return a parsed JSON array
 def get_team_matches(key, team):
     url = URL_START + team + URL_MID + EVENT_KEY + URL_END + key
-    return requests.get(url).json()
+    return call_tba_api(url)
 
+# Call the TBA API with retries in case it is busy
+def call_tba_api(url):
+    for i in range(10):
+        try:
+            return requests.get(url).json()
+        except:
+            print('TBA API busy, retrying...')
+            time.sleep(1)
+    print('TBA API busy, giving up...')
+    exit()
+    
 # The core program!!
 def main():
     input_team = input("Enter team [press enter for default]: ")
