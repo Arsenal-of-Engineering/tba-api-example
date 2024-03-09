@@ -6,7 +6,7 @@ import time
 # Path to your The Blue Alliance read API key
 KEY_PATH = 'var/tba-read-key.txt'
 
-# Your event and team
+# Default event and team
 EVENT_KEY = '2024mndu'
 TEAM = 'frc1732'
 
@@ -30,8 +30,8 @@ def load_read_key():
     return lines[0]
 
 # Build the URL, call the Blue Alliance API, return a parsed JSON array
-def get_team_matches(key, team):
-    url = URL_START + team + URL_MID + EVENT_KEY + URL_END + key
+def get_team_matches(key, team, event):
+    url = URL_START + team + URL_MID + event + URL_END + key
     return call_tba_api(url)
 
 # Call the TBA API with retries in case it is busy
@@ -53,8 +53,14 @@ def main():
     else:
         team = TEAM
 
+    input_event = input("Enter an event code [press enter for default]: ")
+    if input_event:
+        event = input_event
+    else:
+        event = EVENT_KEY
+
     tba_read_key = load_read_key()
-    matches = get_team_matches(tba_read_key, team)
+    matches = get_team_matches(tba_read_key, team, event)
 
     # Variables we use to sum up the metrics
     vals = []
@@ -114,7 +120,7 @@ def main():
                 percents['wins'] = percents.get('wins', 0) + 1
 
     print('-----------------------------------')
-    print(' Team:', team, ' at event:', EVENT_KEY)
+    print(' Team:', team, ' at event:', event)
     print('-----------------------------------')
     print('Robot specific metrics:')
 
