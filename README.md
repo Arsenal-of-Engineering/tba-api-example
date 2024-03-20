@@ -5,6 +5,8 @@ Example of how to use The Blue Alliance API to get match information.
 
 `team_performance.py`: For a given event, summarizes average game performance for a team.
 
+'MatchMetrics.ipynb': A data analysis "notebook" that displays several charts and statistics.
+
 ## How to run
 1. Clone this repository: [general instructions here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
 2. Install the package to call APIs called `requests`.  Either install it globally or create a virtual environment (preferred).  
