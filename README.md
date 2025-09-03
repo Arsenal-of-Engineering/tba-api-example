@@ -5,6 +5,8 @@ Example of how to use The Blue Alliance API to get match information.
 
 `team_performance.py`: For a given event, summarizes average game performance for a team.
 
+`CompetitorTeamsByWeek.ipnb`: For a given team, finds all of the teams that they will compete with. Then, finds all their events and orders them by week/event.
+
 'MatchMetrics.ipynb': A data analysis "notebook" that displays several charts and statistics.
 
 ## How to run
